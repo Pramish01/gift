@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>For You 💌</title>
+  <style>
+    body {
+      background: #ffe6f0;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 100px 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Middle love box with larger size */
+    .love-box {
+      width: 900px;
+      height: 500px;
+      background-color: #ff99cc;
+      border-radius: 25px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .love-box p {
+      color: white;
+      font-size: 1.5rem;
+      display: none;
+    }
+
+    button {
+      margin-top: 50px;
+      padding: 15px 30px;
+      background-color: #ff4da6;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      z-index: 2;
+      position: relative;
+    }
+
+    button:hover {
+      background-color: #ff1a8c;
+    }
+
+    /* Paper pop-out style */
+    .paper {
+      position: absolute;
+      width: 400px;
+      height: 300px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      opacity: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+    }
+
+    .paper.open {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+
+    .paper p {
+      color: #ff4da6;
+      font-size: 1.3rem;
+      font-weight: bold;
+      text-align: center;
+      margin: 20px;
+    }
+
+    /* Animation for hearts floating upwards */
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: floatHearts 4s linear forwards;
+      z-index: 0;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    /* Keyframes for floating hearts */
+    @keyframes floatHearts {
+      0% {
+        opacity: 1;
+        transform: scale(1) rotate(45deg);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.5) rotate(90deg);
+        top: -600px;  /* Move upwards */
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="love-box" id="box">
+      <p id="hiddenMessage">Dear Love, 💖<br>
+        From the moment I met you, my heart has known a love deeper than words could ever express. ❤️ You’ve brought light into my life in ways I never imagined possible. 🌟 Every day with you feels like a new adventure, and I find myself falling more and more in love with you. 😘
+        
+        I want to build a future together one filled with laughter, warmth, and endless moments of love. 💍 Every little thing we do, from sharing simple glances to making big dreams come true, holds so much meaning. 👫 You are my heart’s purpose, and I want to spend my life cherishing and making memories with you. 💕
+        
+        As we grow together, I promise to always make you feel loved, appreciated, and supported in everything you do. 🌹 I will stand by your side through all the ups and downs, because you are worth every moment, every sacrifice, and every smile. 😊
+        
+        I want to keep making things of love with you sharing beautiful moments, holding your hand through life’s challenges, and building a love that grows stronger each day. 🌱 You’re my everything, and I am so lucky to call you mine. 🥰
+        
+        Forever yours,
+        Your Love💖
+        
+      </p>
+    </div>
+    <button id="openBtn">Open</button>
+    <div class="paper" id="paper">
+      <p>My love for you is endless 💌</p>
+    </div>
+  </div>
+
+  <script>
+    let heartsAlreadyShown = false; // Prevent hearts from showing more than once
+    let paperOpened = false; // Flag to check if paper has already been opened
+
+    document.getElementById("openBtn").addEventListener("click", openBox);
+
+    function openBox() {
+      // If paper is already opened, don't do anything
+      if (paperOpened) return;
+
+      // Show the paper unfold effect
+      const paper = document.getElementById("paper");
+      paper.classList.add("open"); // This triggers the unfold animation
+
+      // Show the message inside the paper
+      setTimeout(() => {
+        document.getElementById("hiddenMessage").style.display = "block";
+      }, 1000); // Delay message reveal to match the paper unfold time
+
+      // Release hearts (outside the box)
+      if (!heartsAlreadyShown) {
+        for (let i = 0; i < 100; i++) {  // Increase the number of hearts
+          createHeart();
+        }
+        heartsAlreadyShown = true; // Set flag to prevent repeating hearts
+      }
+
+      // Set the flag to true after the paper is opened
+      paperOpened = true;
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+
+      // Randomize the horizontal position and vertical starting position of the hearts
+      heart.style.left = Math.random() * window.innerWidth + "px";  // Random X position
+      heart.style.top = window.innerHeight + "px";  // Start from the bottom
+
+      // Randomize the size of the hearts to add variation
+      const size = Math.random() * 15 + 10;  // Sizes between 10px and 25px
+      heart.style.width = `${size}px`;
+      heart.style.height = `${size}px`;
+
+      // Append heart to the body
+      document.body.appendChild(heart);
+
+      // Remove heart after animation is done
+      setTimeout(() => {
+        heart.remove();
+      }, 4000);  // Animation lasts 4 seconds
+    }
+  </script>
+</body>
+</html>
